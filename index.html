@@ -3,118 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caffeine Cut-Off & Sleep Optimization Calculator</title>
+    <title>Caffeine Cut-Off & Sleep Optimization</title>
     <style>
-        :root { --bg-main: #0f172a; --bg-card: #1e293b; --bg-input: #0f172a; --text-main: #f8fafc; --text-muted: #94a3b8; --primary: #818cf8; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; }
+        :root { --bg: #0f172a; --card: #1e293b; --primary: #818cf8; --text: #f8fafc; --muted: #94a3b8; --danger: #ef4444; --warning: #f59e0b; --success: #10b981; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: var(--bg-main); color: var(--text-main); font-family: system-ui, sans-serif; padding-bottom: 40px; }
-        nav { background: rgba(15, 23, 42, 0.9); border-bottom: 1px solid #334155; padding: 15px 30px; display: flex; justify-content: space-between; position: sticky; top: 0; }
-        .nav-logo { color: var(--primary); font-weight: bold; font-size: 1.25rem; }
-        .nav-links a { color: var(--text-muted); text-decoration: none; margin-left: 20px; font-size: 0.9rem; }
-        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-        .hero { text-align: center; max-width: 700px; margin: 0 auto 40px auto; }
-        .hero h1 { font-size: 2.3rem; font-weight: 800; margin-bottom: 15px; }
-        .grid { display: grid; grid-template-columns: 1fr; gap: 30px; }
-        @media (min-width: 768px) { .grid { grid-template-columns: 4fr 6fr; } }
-        .card { background: var(--bg-card); border: 1px solid #334155; border-radius: 16px; padding: 25px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
-        select, input { width: 100%; background: var(--bg-input); border: 1px solid #475569; border-radius: 8px; padding: 12px; color: #fff; font-size: 1rem; }
+        body { background: var(--bg); color: var(--text); font-family: system-ui, sans-serif; padding: 20px; line-height: 1.5; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 25px; }
+        header h1 { font-size: 2rem; color: #fff; margin-bottom: 5px; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+        .card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; color: #cbd5e1; }
+        select, input { width: 100%; background: var(--bg); border: 1px solid #475569; border-radius: 6px; padding: 10px; color: #fff; font-size: 1rem; }
         .hidden { display: none; }
-        .verdict-box { border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid transparent; }
-        .verdict-danger { background: rgba(239, 68, 68, 0.1); border-color: var(--danger); }
-        .verdict-warning { background: rgba(245, 158, 11, 0.1); border-color: var(--warning); }
-        .verdict-success { background: rgba(16, 185, 129, 0.1); border-color: var(--success); }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .stat-item { background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 8px; border: 1px solid #334155; }
-        .stat-label { font-size: 0.75rem; color: var(--text-muted); }
-        .stat-value { font-size: 1.3rem; font-weight: 700; margin-top: 5px; }
-        .chart-container { background: rgba(15, 23, 42, 0.2); border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-top: 20px; }
-        .bar-wrapper { display: flex; align-items: flex-end; justify-content: space-between; height: 100px; border-bottom: 1px solid #475569; gap: 4px; }
-        .bar { width: 100%; background: var(--primary); border-radius: 3px 3px 0 0; }
-        .chart-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: #64748b; mt: 8px; margin-top: 5px;}
-        .prose-section { border-top: 1px solid #334155; margin-top: 5px; padding: 40px 20px; background: #0b0f19; border-radius: 16px; }
-        .prose-content { max-width: 800px; margin: 0 auto; }
-        .prose-content h2 { font-size: 1.7rem; color: #fff; margin: 25px 0 15px 0; }
-        .prose-content p { color: #94a3b8; margin-bottom: 15px; text-align: justify; }
-        .protocol-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 25px; }
-        @media (min-width: 768px) { .protocol-grid { grid-template-columns: 1fr 1fr 1fr; } }
-        .protocol-card { background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; padding: 20px; border-radius: 12px; }
-        footer { text-align: center; padding: 30px; font-size: 0.8rem; color: #475569; margin-top: 40px; border-top: 1px solid #334155; }
+        .verdict-box { border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid transparent; }
+        .verdict-danger { background: rgba(239, 68, 68, 0.15); border-color: var(--danger); color: #fca5a5; }
+        .verdict-warning { background: rgba(245, 158, 11, 0.15); border-color: var(--warning); color: #fde047; }
+        .verdict-success { background: rgba(16, 185, 129, 0.15); border-color: var(--success); color: #86efac; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-card { background: rgba(15, 23, 42, 0.3); padding: 12px; border-radius: 6px; border: 1px solid #334155; }
+        .stat-label { font-size: 0.75rem; color: var(--muted); }
+        .stat-value { font-size: 1.2rem; font-weight: bold; margin-top: 4px; }
+        .chart-box { background: rgba(15, 23, 42, 0.2); border: 1px solid #334155; border-radius: 8px; padding: 15px; margin-top: 15px; }
+        .bar-container { display: flex; align-items: flex-end; justify-content: space-between; height: 80px; border-bottom: 1px solid #475569; gap: 3px; }
+        .bar { width: 100%; background: var(--primary); border-radius: 2px 2px 0 0; }
+        .chart-labels { display: flex; justify-content: space-between; font-size: 0.7rem; color: #64748b; margin-top: 5px; }
+        .article { border-top: 1px solid #334155; margin-top: 30px; padding-top: 20px; }
+        .article h2 { font-size: 1.3rem; color: #fff; margin: 15px 0 5px 0; }
+        .article p { color: var(--muted); font-size: 0.9rem; margin-bottom: 10px; }
+        footer { text-align: center; margin-top: 30px; font-size: 0.75rem; color: #475569; }
     </style>
 </head>
 <body>
-    <nav><div class="nav-logo">CaffeineSleep</div><div class="nav-links"><a href="#calculator">Calculator</a><a href="#science">Science</a></div></nav>
     <div class="container">
-        <div class="hero"><h1>Don't Let Your Morning Brew <br><span style="color: var(--primary)">Wreck Your Deep Sleep</span></h1><p>Caffeine has a half-life of up to 8 hours. Track how it acts inside your brain overnight.</p></div>
-        <div id="calculator" class="grid">
+        <header>
+            <h1>Caffeine & Sleep Optimization</h1>
+            <p>Track physiological caffeine decay and protect your deep sleep state.</p>
+        </header>
+        <div class="grid">
             <div class="card">
-                <div class="form-group"><label>Select Beverage</label><select id="beverage" onchange="updateCaffeineMg()"><option value="100">Drip Coffee (100mg)</option><option value="64">Espresso Shot (64mg)</option><option value="150">Energy Drink (150mg)</option><option value="custom">Custom...</option></select></div>
-                <div id="custom-mg-container" class="form-group hidden"><label>Custom Amount (mg)</label><input type="number" id="custom-mg" value="100" oninput="calculateMetrics()"></div>
-                <div class="form-group"><label>Consumption Time</label><input type="time" id="consume-time" value="08:00" onchange="calculateMetrics()"></div>
-                <div class="form-group"><label>Target Bedtime</label><input type="time" id="bedtime" value="22:00" onchange="calculateMetrics()"></div>
-                <div class="form-group"><div style="display: flex; justify-content: space-between;"><label>Metabolic Speed</label><span id="sensitivity-label" style="color: var(--primary);">Average</span></div><input type="range" id="sensitivity" min="4" max="8" value="6" oninput="calculateMetrics()"></div>
+                <div class="form-group">
+                    <label>Beverage Type</label>
+                    <select id="beverage" onchange="updateBev()">
+                        <option value="100">Drip Coffee (100mg)</option>
+                        <option value="64">Espresso Shot (64mg)</option>
+                        <option value="150">Energy Drink (150mg)</option>
+                        <option value="custom">Custom Amount...</option>
+                    </select>
+                </div>
+                <div id="custom-box" class="form-group hidden">
+                    <label>Amount (mg)</label>
+                    <input type="number" id="custom-mg" value="100" oninput="calc()">
+                </div>
+                <div class="form-group">
+                    <label>Time Consumed</label>
+                    <input type="time" id="ctime" value="08:00" onchange="calc()">
+                </div>
+                <div class="form-group">
+                    <label>Target Bedtime</label>
+                    <input type="time" id="btime" value="22:00" onchange="calc()">
+                </div>
+                <div class="form-group">
+                    <div style="display:flex; justify-content:between;"><label>Metabolism Speed</label><span id="hl-txt" style="color:var(--primary)">6h half-life</span></div>
+                    <input type="range" id="sensitivity" min="4" max="8" value="6" oninput="calc()">
+                </div>
             </div>
             <div>
-                <div id="verdict-card" class="verdict-box verdict-success"><h3 id="verdict-title">Calculating...</h3><p id="verdict-desc">Adjust inputs.</p></div>
-                <div class="stats-grid">
-                    <div class="stat-item"><div class="stat-label">Bedtime Residue</div><div class="stat-value" id="bedtime-residue">0 mg</div></div>
-                    <div class="stat-item"><div class="stat-label">Predicted Crash</div><div class="stat-value" id="crash-time">--:--</div></div>
-                    <div class="stat-item"><div class="stat-label">Adenosine Reset</div><div class="stat-value" id="reset-time">--:--</div></div>
-                    <div class="stat-item"><div class="stat-label">Deep Sleep Delta</div><div class="stat-value" id="sleep-impact">0%</div></div>
+                <div id="vcard" class="verdict-box verdict-success">
+                    <h3 id="vtitle">Analyzing...</h3>
+                    <p id="vdesc">Change options to see dynamic analysis.</p>
                 </div>
-                <div class="chart-container"><div class="bar-wrapper" id="timeline-chart"></div><div class="chart-labels"><span>Intake</span><span>Bedtime</span><span>Next Day</span></div></div>
+                <div class="stats">
+                    <div class="stat-card"><div class="stat-label">Bedtime Residue</div><div class="stat-value" id="res-mg">0 mg</div></div>
+                    <div class="stat-card"><div class="stat-label">Predicted Crash</div><div class="stat-value" id="crash-t">--:--</div></div>
+                    <div class="stat-card"><div class="stat-label">Adenosine Reset</div><div class="stat-value" id="reset-t">--:--</div></div>
+                    <div class="stat-card"><div class="stat-label">Deep Sleep Delta</div><div class="stat-value" id="sleep-d">0%</div></div>
+                </div>
+                <div class="chart-box">
+                    <div class="bar-container" id="chart"></div>
+                    <div class="chart-labels"><span>Intake</span><span>Bedtime</span><span>Next Day</span></div>
+                </div>
             </div>
         </div>
-        <section id="science" class="prose-section"><div class="prose-content"><h2>How Caffeine Alters Deep Sleep Architecture</h2><p>Circulating blood alkaloids disrupt the critical macro-architecture of human sleep phases, drastically lessening Slow-Wave Sleep (SWS), widely understood as Deep Sleep. Caffeine operates as a potent stimulant because its molecular dimensions match Adenosine, blinding your nervous system to physiological fatigue.</p><h2>Emergency Caffeine Flush Protocols</h2><div class="protocol-grid"><div class="protocol-card"><h4>💧 Hyper-Hydration</h4><p>Increasing pure water consumption speeds up renal filtration rates, flushing out caffeine faster.</p></div><div class="protocol-card"><h4>🌿 L-Theanine</h4><p>Counteracts central nervous over-excitation, minimizing resting heart rates and cortisol spikes.</p></div><div class="protocol-card"><h4>🏃 Zone 2 Cardio</h4><p>A light 20-minute jog upregulates liver enzyme activity, assisting in faster degradation of active blood alkaloids.</p></div></div></div></section>
+        <section class="article">
+            <h2>How Caffeine Alters Deep Sleep Architecture</h2>
+            <p>Circulating caffeine fragments disrupt macro-architecture by reducing Slow-Wave Sleep (SWS). Because its structures map closely onto Adenosine, it effectively binds to neural paths, keeping your central nervous system blind to exhaustion.</p>
+            <h2>Strategic Flush Protocols</h2>
+            <p><strong>Hyper-Hydration:</strong> High water volumes promote quick renal pathway clearance cycles. <br><strong>L-Theanine:</strong> Blocks systemic baseline cardiovascular spikes and bedtime cortisol production loops.</p>
+        </section>
+        <footer><p>&copy; 2026 CaffeineSleep Project | Privacy Policy</p></footer>
     </div>
-    <footer><p>&copy; 2026 CaffeineSleep Optimization Project. <a href="#">Privacy Policy</a></p></footer>
     <script>
-        function updateCaffeineMg() {
-            const select = document.getElementById('beverage');
-            document.getElementById('custom-mg-container').className = select.value === 'custom' ? 'form-group' : 'form-group hidden';
-            calculateMetrics();
+        function updateBev() {
+            var s = document.getElementById('beverage');
+            document.getElementById('custom-box').className = s.value === 'custom' ? 'form-group' : 'form-group hidden';
+            calc();
         }
-        function calculateMetrics() {
-            const bev = document.getElementById('beverage');
-            let initialMg = bev.value === 'custom' ? parseFloat(document.getElementById('custom-mg').value) || 0 : parseFloat(bev.value);
-            const cTime = document.getElementById('consume-time').value;
-            const bTime = document.getElementById('bedtime').value;
-            const halfLife = parseFloat(document.getElementById('sensitivity').value);
-            document.getElementById('sensitivity-label').innerText = halfLife + "h half-life";
-            if (!cTime || !bTime) return;
-            const cParts = cTime.split(':').map(Number);
-            const bParts = bTime.split(':').map(Number);
-            let intakeM = cParts[0] * 60 + cParts[1];
-            let bedM = bParts[0] * 60 + bParts[1];
-            if (bedM < intakeM) bedM += 24 * 60;
-            const hoursToBed = (bedM - intakeM) / 60;
-            const remainingMg = initialMg * Math.pow(0.5, hoursToBed / halfLife);
-            document.getElementById('bedtime-residue').innerText = remainingMg.toFixed(1) + " mg";
-            let crashM = intakeM + (4.5 * 60);
-            document.getElementById('crash-time').innerText = Math.floor((crashM / 60) % 24).toString().padStart(2, '0') + ":" + Math.floor(crashM % 60).toString().padStart(2, '0');
-            let hoursToReset = initialMg > 15 ? halfLife * Math.log2(initialMg / 15) : 0;
-            let resetM = intakeM + (hoursToReset * 60);
-            document.getElementById('reset-time').innerText = Math.floor((resetM / 60) % 24).toString().padStart(2, '0') + ":" + Math.floor(resetM % 60).toString().padStart(2, '0');
-            let impact = remainingMg > 50 ? Math.min(45, Math.floor((remainingMg / 150) * 45)) : (remainingMg > 20 ? 15 : 0);
-            document.getElementById('sleep-impact').innerText = "-" + impact + "%";
-            const card = document.getElementById('verdict-card');
-            const vTitle = document.getElementById('verdict-title');
-            const vDesc = document.getElementById('verdict-desc');
-            if (remainingMg > 45) { card.className = "verdict-box verdict-danger"; vTitle.innerText = "🚨 Critical Sleep Disruption"; vDesc.innerText = "High bedtime caffeine residue will wipe out slow-wave deep sleep states."; }
-            else if (remainingMg > 15) { card.className = "verdict-box verdict-warning"; vTitle.innerText = "⚠️ Moderate Sleep Degradation"; vDesc.innerText = "Mild stimulation active. Your brain architecture will bypass deep recovery stages."; }
-            else { card.className = "verdict-box verdict-success"; vTitle.innerText = "✅ Optimal Sleep Clearance"; vDesc.innerText = "Caffeine successfully degraded below actionable levels for deep sleep."; }
-            const chart = document.getElementById('timeline-chart'); chart.innerHTML = '';
-            for (let i = 0; i < 16; i++) {
-                let currentMg = initialMg * Math.pow(0.5, (i * 1.25) / halfLife);
-                const bar = document.createElement('div'); bar.className = 'bar';
-                if (remainingMg > 45) bar.style.backgroundColor = 'var(--danger)';
-                else if (remainingMg > 15) bar.style.backgroundColor = 'var(--warning)';
-                bar.style.height = Math.min(100, Math.max(5, (currentMg / 180) * 100)) + '%';
-                chart.appendChild(bar);
+        function calc() {
+            var bev = document.getElementById('beverage');
+            var mg = bev.value === 'custom' ? parseFloat(document.getElementById('custom-mg').value) || 0 : parseFloat(bev.value);
+            var ct = document.getElementById('ctime').value;
+            var bt = document.getElementById('btime').value;
+            var hl = parseFloat(document.getElementById('sensitivity').value);
+            document.getElementById('hl-txt').innerText = hl + "h half-life";
+            if(!ct || !bt) return;
+            var cp = ct.split(':');
+            var bp = bt.split(':');
+            var im = parseInt(cp[0]) * 60 + parseInt(cp[1]);
+            var bm = parseInt(bp[0]) * 60 + parseInt(bp[1]);
+            if(bm < im) bm += 24 * 60;
+            var h = (bm - im) / 60;
+            var rem = mg * Math.pow(0.5, h / hl);
+            document.getElementById('res-mg').innerText = rem.toFixed(1) + " mg";
+            var crM = im + 270;
+            document.getElementById('crash-t').innerText = String(Math.floor((crM / 60) % 24)).padStart(2, '0') + ":" + String(Math.floor(crM % 60)).padStart(2, '0');
+            var hRes = mg > 15 ? hl * Math.log2(mg / 15) : 0;
+            var rM = im + (hRes * 60);
+            document.getElementById('reset-t').innerText = String(Math.floor((rM / 60) % 24)).padStart(2, '0') + ":" + String(Math.floor(rM % 60)).padStart(2, '0');
+            var imp = rem > 50 ? Math.min(45, Math.floor((rem / 150) * 45)) : (rem > 20 ? 15 : 0);
+            document.getElementById('sleep-d').innerText = "-" + imp + "%";
+            var card = document.getElementById('vcard');
+            var vt = document.getElementById('vtitle');
+            var vd = document.getElementById('vdesc');
+            if(rem > 45) { card.className = "verdict-box verdict-danger"; vt.innerText = "🚨 Critical Sleep Disruption"; vd.innerText = "High bedtime caffeine residue will wipe out slow-wave deep sleep states."; }
+            else if(rem > 15) { card.className = "verdict-box verdict-warning"; vt.innerText = "⚠️ Moderate Sleep Degradation"; vd.innerText = "Mild stimulation active. Your brain architecture will bypass deep recovery stages."; }
+            else { card.className = "verdict-box verdict-success"; vt.innerText = "✅ Optimal Sleep Clearance"; vd.innerText = "Caffeine successfully degraded below actionable levels for deep sleep."; }
+            var ch = document.getElementById('chart'); ch.innerHTML = '';
+            for(var i=0; i<16; i++) {
+                var cMg = mg * Math.pow(0.5, (i * 1.25) / hl);
+                var b = document.createElement('div'); b.className = 'bar';
+                if(rem > 45) b.style.backgroundColor = 'var(--danger)';
+                else if(rem > 15) b.style.backgroundColor = 'var(--warning)';
+                b.style.height = Math.min(100, Math.max(5, (cMg / 180) * 100)) + '%';
+                ch.appendChild(b);
             }
         }
-        window.onload = calculateMetrics;
+        window.onload = calc;
     </script>
 </body>
 </html>
