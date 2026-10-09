@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caffeine Cut-Off & Sleep Optimization Calculator</title>
+    <meta name="description" content="Optimize your sleep with our interactive Caffeine Cut-off Calculator. Track caffeine decay, predict energy crashes, and protect your deep sleep using data-backed biohacking insights.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Navigation Bar -->
+    <nav class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2 text-indigo-400 font-bold text-xl tracking-tight">
+                <i data-lucide="coffee" class="w-6 h-6"></i>
+                <span>Caffeine<span class="text-white">Sleep</span></span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-400">
+                <a href="#calculator" class="hover:text-white transition">Calculator</a>
+                <a href="#science" class="hover:text-white transition">The Science</a>
+                <a href="#protocols" class="hover:text-white transition">Flush Protocols</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero & Calculator Section -->
+    <main id="calculator" class="max-w-6xl mx-auto px-4 py-12 md:py-20">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-500/10 rounded-full border border-indigo-500/20">Biohacking Tool</span>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mt-4 tracking-tight leading-tight">
+                Don't Let Your Morning Brew <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">Wreck Your Deep Sleep</span>
+            </h1>
+            <p class="mt-4 text-slate-400 text-lg leading-relaxed">
+                Caffeine has a half-life of up to 8 hours. Input your intake parameters below to predict your metabolic crash, adenosine reset timeline, and your absolute sleep cut-off time.
+            </p>
+        </div>
+
+        <!-- Interactive Calculator Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Column: Inputs -->
+            <div class="lg:col-span-5 bg-slate-800/50 border border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm shadow-xl space-y-6">
+                <div class="flex items-center space-x-3 border-b border-slate-700 pb-4">
+                    <i data-lucide="sliders" class="text-indigo-400 w-5 h-5"></i>
+                    <h2 class="text-xl font-bold text-white">Adjust Parameters</h2>
+                </div>
+
+                <!-- Input: Beverage Type -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Select Your Beverage</label>
+                    <select id="beverage" onchange="updateCaffeineMg()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500 transition">
+                        <option value="100">Standard Drip Coffee (100mg)</option>
+                        <option value="64">Single Espresso Shot (64mg)</option>
+                        <option value="128">Double Espresso Shot (128mg)</option>
+                        <option value="150">Energy Drink (150mg)</option>
+                        <option value="35">Green Tea / Matcha (35mg)</option>
+                        <option value="custom">Custom Amount...</option>
+                    </select>
+                </div>
+
+                <!-- Input: Custom Mg -->
+                <div id="custom-mg-container" class="hidden">
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Custom Caffeine Amount (mg)</label>
+                    <input type="number" id="custom-mg" value="100" min="1" max="1000" oninput="calculateMetrics()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500 transition">
+                </div>
+
+                <!-- Input: Time Consumed -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Time of Consumption</label>
+                    <input type="time" id="consume-time" value="08:00" onchange="calculateMetrics()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500 transition">
+                </div>
+
+                <!-- Input: Intended Bedtime -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-300 mb-2">Target Bedtime</label>
+                    <input type="time" id="bedtime" value="22:00" onchange="calculateMetrics()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-200 focus:outline-none focus:border-indigo-500 transition">
+                </div>
+
+                <!-- Input: Sensitivity Slider -->
+                <div>
+                    <div class="flex justify-between text-sm font-semibold mb-2">
+                        <label class="text-slate-300">Metabolic Speed (Sensitivity)</label>
+                        <span id="sensitivity-label" class="text-indigo-400">Average (6h half-life)</span>
+                    </div>
+                    <input type="range" id="sensitivity" min="4" max="8" value="6" step="1" oninput="calculateMetrics()" class="w-full accent-indigo-500 bg-slate-700 h-2 rounded-lg cursor-pointer">
+                    <div class="flex justify-between text-xs text-slate-500 mt-1">
+                        <span>Fast (4h)</span>
+                        <span>Slow (8h)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Interactive Real-Time Outputs -->
+            <div class="lg:col-span-7 space-y-6">
+                <!-- Main Verdict Card -->
+                <div id="verdict-card" class="border rounded-2xl p-6 transition-all duration-300 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-xs uppercase tracking-wider font-semibold opacity-80" id="verdict-subtitle">Sleep Window Analysis</p>
+                                <h3 class="text-2xl font-bold mt-1 text-white" id="verdict-title">Calculating...</h3>
+                            </div>
+                            <span id="verdict-icon" class="p-3 bg-white/10 rounded-xl"></span>
+                        </div>
+                        <p class="mt-4 text-sm leading-relaxed text-slate-300" id="verdict-desc">
+                            Adjust inputs to view your data report.
+                        </p>
+                    </div>
+
+                    <!-- Critical Data Points Row -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-white/10">
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Bedtime Residue</p>
+                            <p class="text-xl font-bold text-white mt-1" id="bedtime-residue">0 mg</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Predicted Crash</p>
+                            <p class="text-xl font-bold text-white mt-1" id="crash-time">--:--</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Adenosine Reset</p>
+                            <p class="text-xl font-bold text-white mt-1" id="reset-time">--:--</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400 font-medium">Deep Sleep Delta</p>
+                            <p class="text-xl font-bold text-white mt-1" id="sleep-impact">0%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Graphic Visualization Block -->
+                <div class="bg-slate-800/30 border border-slate-700/50 rounded-2xl p-6">
+                    <h4 class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">
+                        <i data-lucide="trending-down" class="w-4 h-4 text-purple-400"></i> Hourly Caffeine Metabolism Decay Timeline
+                    </h4>
+                    <div class="flex items-end justify-between h-36 px-2 border-b border-slate-700 pb-2 gap-1" id="timeline-chart">
+                        <!-- Rendered by JavaScript dynamically -->
+                    </div>
+                    <div class="flex justify-between text-xs text-slate-500 mt-2 px-1">
+                        <span>Intake</span>
+                        <span>Midday</span>
+                        <span>Bedtime</span>
+                        <span>Next Day</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Science Section -->
+    <section id="science" class="border-t border-slate-800 bg-slate-950 py-16 px-6">
+        <div class="max-w-4xl mx-auto">
+            <span class="text-indigo-400 font-semibold text-sm uppercase tracking-wider">Clinical Insights</span>
+            <h2 class="text-3xl font-extrabold text-white mt-2 mb-6">How Caffeine Decays & Alters Deep Sleep Architecture</h2>
+            
+            <p class="text-slate-400 leading-relaxed mb-6">
+                Many individuals believe that as long as they can easily fall asleep at night, their afternoon espresso poses no threat to their health. However, recent clinical sleep research demonstrates that circulating caffeine disrupts the macro-architecture of human sleep. Specifically, it heavily diminishes Slow-Wave Sleep (SWS), commonly referred to as Deep Sleep.
+            </p>
+
+            <h3 class="text-xl font-bold text-slate-200 mt-8 mb-3">The Molecular Mechanism: Caffeine vs. Adenosine</h3>
+            <p class="text-slate-400 leading-relaxed mb-6">
+                Throughout the day, your brain builds up a chemical compound called Adenosine. The accumulation of adenosine creates an incremental physiological demand for sleep, known as "Sleep Pressure." Caffeine functions as an exogenous central nervous system stimulant because it possesses a matching molecular shape to adenosine. It successfully binds to and blocks adenosine receptors without activating them, essentially blinding your brain to its own biological exhaustion.
+            </p>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 my-8">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <i data-lucide="alert-circle" class="text-amber-400 w-5 h-5"></i> The Half-Life Trap
+                </h4>
+                <p class="text-slate-400 text-sm leading-relaxed">
+                    Caffeine is remarkably resilient. It exhibits an average human biological half-life of approximately 5 to 7 hours, extending up to 8 hours for slow metabolizers. If you ingest a cup of coffee containing 100mg of caffeine at 4:00 PM, roughly 50mg remains active in your cerebral tissue at 10:00 PM. This is biochemically equivalent to downing a warm shot of espresso right before turning off your lights.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Protocols & Mitigation Section -->
+    <section id="protocols" class="border-t border-slate-800 bg-slate-900 py-16 px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-pink-400 font-semibold text-sm uppercase tracking-wider">Mitigation Strategies</span>
+                <h2 class="text-3xl font-extrabold text-white mt-2">Emergency Caffeine Flush Protocols</h2>
+                <p class="text-slate-400 mt-2 text-sm">Accidentally drank coffee too late? Implement these methods to minimize deep sleep degradation.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-800/40 border border-slate-700/40 p-6 rounded-xl">
+                    <div class="p-3 bg-indigo-500/10 text-indigo-400 w-fit rounded-lg mb-4">
+                        <i data-lucide="droplet" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-bold text-white mb-2">Hyper-Hydration</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Caffeine is a diuretic. Increasing water intake speeds up systemic clearance via kidney filtration and mitigates elevated resting heart rates.</p>
+                </div>
+
+                <div class="bg-slate-800/40 border border-slate-700/40 p-6 rounded-xl">
+                    <div class="p-3 bg-purple-500/10 text-purple-400 w-fit rounded-lg mb-4">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-bold text-white mb-2">L-Theanine Synergy</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">Taking 100-200mg of L-Theanine (a green tea amino acid) dampens central nervous overstimulation and lowers bedtime cortisol spikes.</p>
+                </div>
+
+                <div class="bg-slate-800/40 border border-slate-700/40 p-6 rounded-xl">
+                    <div class="p-3 bg-pink-500/10 text-pink-400 w-fit rounded-lg mb-4">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <h4 class="font-bold text-white mb-2">Zone 2 Aerobics</h4>
+                    <p class="text-slate-400 text-xs leading-relaxed">A gentle 20-minute walk boosts liver enzyme metabolism slightly, aiding faster degradation of active blood alkaloid levels.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Area -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-8 px-6 text-center text-xs text-slate-500">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 CaffeineSleep Optimization Project. Data-backed and open source.</p>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:underline">Privacy Policy</a>
+                <a href="#" class="hover:underline">Terms of Service</a>
+                <a href="#" class="hover:underline">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Start Lucide Icon rendering engine
+        lucide.createIcons();
+
+        function updateCaffeineMg() {
+            const select = document.getElementById('beverage');
+            const customContainer = document.getElementById('custom-mg-container');
+            if (select.value === 'custom') {
+                customContainer.classList.remove('hidden');
+            } else {
+                customContainer.classList.add('hidden');
+            }
+            calculateMetrics();
+        }
+
+        function calculateMetrics() {
+            const beverageSelect = document.getElementById('beverage');
+            let initialMg = beverageSelect.value === 'custom' 
+                ? parseFloat(document.getElementById('custom-mg').value) || 0 
+                : parseFloat(beverageSelect.value);
+
+            const consumeTimeStr = document.getElementById('consume-time').value;
+            const bedtimeStr = document.getElementById('bedtime').value;
+            const halfLife = parseFloat(document.getElementById('sensitivity').value);
+
+            const labels = {4: "Fast (4h half-life)", 5: "Moderate (5h half-life)", 6: "Average (6h half-life)", 7: "Slower (7h half-life)", 8: "Slow (8h half-life)"};
+            document.getElementById('sensitivity-label').innerText = labels[halfLife];
+
+            if (!consumeTimeStr || !bedtimeStr) return;
+
+            const [cHour, cMin] = consumeTimeStr.split(':').map(Number);
+            const [bHour, bMin] = bedtimeStr.split(':').map(Number);
+            
+            let intakeMinutes = cHour * 60 + cMin;
+            let bedMinutes = bHour * 60 + bMin;
+            
+            if (bedMinutes < intakeMinutes) {
+                bedMinutes += 24 * 60;
+            }
+            
+            const hoursToBed = (bedMinutes - intakeMinutes) / 60;
+            const remainingMg = initialMg * Math.pow(0.5, hoursToBed / halfLife);
+            
+            document.getElementById('bedtime-residue').innerText = remainingMg.toFixed(1) + " mg";
+
+            let crashMinutes = intakeMinutes + (4.5 * 60);
+            let crashH = Math.floor((crashMinutes / 60) % 24).toString().padStart(2, '0');
+            let crashM = Math.floor(crashMinutes % 60).toString().padStart(2, '0');
+            document.getElementById('crash-time').innerText = `${crashH}:${crashM}`;
+
+            let hoursToReset = 0;
+            if (initialMg > 15) {
+                hoursToReset = halfLife * Math.log2(initialMg / 15);
+            }
+            let resetMinutes = intakeMinutes + (hoursToReset * 60);
+            let resetH = Math.floor((resetMinutes / 60) % 24).toString().padStart(2, '0');
+            let resetM = Math.floor(resetMinutes % 60).toString().padStart(2, '0');
+            document.getElementById('reset-time').innerText = `${resetH}:${resetM}`;
+
+            let deepSleepImpact = 0;
+            if (remainingMg > 50) {
+                deepSleepImpact = Math.min(45, Math.floor((remainingMg / 150) * 45));
+            } else if (remainingMg > 20) {
+                deepSleepImpact = 15;
+            } else {
+                deepSleepImpact = 0;
+            }
+            document.getElementById('sleep-impact').innerText = `-${deepSleepImpact}%`;
+
+            const card = document.getElementById('verdict-card');
+            const iconContainer = document.getElementById('verdict-icon');
+            const vTitle = document.getElementById('verdict-title');
+            const vDesc = document.getElementById('verdict-desc');
+
+            if (remainingMg > 45) {
+                card.className = "bg-rose-950/40 border-rose-500/40 border rounded-2xl p-6 transition-all duration-300 shadow-xl flex flex-col justify-between text-rose-200";
+                iconContainer.innerHTML = `<i data-lucide="shield-alert" class="w-6 h-6 text-rose-400"></i>`;
+                vTitle.innerText = "Critical Sleep Disruption";
+                vDesc.innerText = "Your circulating bedtime caffeine level is severely high. This state blocks adenosine receptors effectively wiping out slow-wave deep sleep states.";
+            } else if (remainingMg > 15) {
+                card.className = "bg-amber-950/30 border-amber-500/40 border rounded-2xl p-6 transition-all duration-300 shadow-xl flex flex-col justify-between text-amber-200";
+                iconContainer.innerHTML = `<i data-lucide="alert-triangle" class="w-6 h-6 text-amber-400"></i>`;
+                vTitle.innerText = "Moderate Sleep Degradation";
+                vDesc.innerText = "Mild stimulation detected. You might easily drift off to sleep, but your brain architecture will likely bypass full regenerative deep stages.";
+            } else {
+                card.className = "bg-emerald-950/30 border-emerald-500/40 border rounded-2xl p-6 transition-all duration-300 shadow-xl flex flex-col justify-between text-emerald-200";
+                iconContainer.innerHTML = `<i data-lucide="check-circle" class="w-6 h-6 text-emerald-400"></i>`;
+                vTitle.innerText = "Optimal Sleep Clearance";
+                vDesc.innerText = "Excellent window. Caffeine concentrations have degraded below actionable bio-levels, allowing standard deep sleep neuro-cleanses to function properly.";
+            }
+            lucide.createIcons();
+
+            const timelineChart = document.getElementById('timeline-chart');
+            timelineChart.innerHTML = '';
+            for (let i = 0; i < 16; i++) {
+                let currentHour = (i * 1.25);
+                let currentMg = initialMg * Math.pow(0.5, currentHour / halfLife);
+                let percentHeight = Math.max(5, (currentMg / 200) * 100);
+                
+                const bar = document.createElement('div');
+                bar.className = `w-full rounded-t-sm transition-all duration-500 ${remainingMg > 45 ? 'bg-rose-500/60' : 'bg-indigo-500/60'}`;
+                bar.style.height = `${Math.min(100, percentHeight)}%`;
+                timelineChart.appendChild(bar);
+            }
+        }
+
+        window.onload = calculateMetrics;
+    </script>
+</body>
+</html>
